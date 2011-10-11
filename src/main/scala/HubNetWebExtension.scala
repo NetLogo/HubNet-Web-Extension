@@ -29,25 +29,41 @@ case class Server(serverPort:Int, hubnetPort: Int){
     def receive(msg:String){
       // when we receive a message from a js client, we need to translate
       // it from json and send it to the hubnet server as a Message
-      hubnetProtocol.writeMessage(msg)
+      val hubnetMessageFromJSON = JSONProtocol.fromJSON(msg)
+      println("hubnetMessageFromJSON: " + hubnetMessageFromJSON)
+      hubnetProtocol.writeMessage(hubnetMessageFromJSON)
     }
     // when a client closes, we should disconnect from hubnet
     def exit(){ hubnetProtocol.writeMessage(ExitMessage("client closed."))}
   }
 
   def run() {
+    println("running new server on: " + serverPort)
     val connections: ConcurrentMap[Int, Connection] = new java.util.concurrent.ConcurrentHashMap[Int, Connection]
     def channelId(s:WebSocket) = s.channel.getId.intValue
-    unfiltered.netty.Http(serverPort).handler(unfiltered.netty.websockets.Planify({
-      case _ => {
-        case Open(s) => connections += (channelId(s) -> Connection(s))
-        case Message(s, Text(msg)) => connections(channelId(s)).receive(msg)
-        case Close(s) => { connections(channelId(s)).exit(); connections -= channelId(s) }
-        case Error(s, e) => e.printStackTrace
+
+    new Thread(new Runnable() {
+      def run() {
+        unfiltered.netty.Http(serverPort).handler(unfiltered.netty.websockets.Planify({
+          case _ => {
+            case Open(s) =>
+              println("connection opened: " + s)
+              connections += (channelId(s) -> Connection(s))
+            case Message(s, Text(msg)) =>
+              println("got message: " + msg)
+              connections(channelId(s)).receive(msg)
+            case Close(s) =>
+              println("connection closed: " + s)
+              connections(channelId(s)).exit()
+              connections -= channelId(s)
+            case Error(s, e) => e.printStackTrace
+          }
+        })
+        .onPass(_.sendUpstream(_)))
+        .handler(unfiltered.netty.cycle.Planify{ case _ => ResponseString("not a websocket")})
+        .run {s =>  } //Browser.open("file://goo.html")
       }
-    })
-    .onPass(_.sendUpstream(_)))
-    .handler(unfiltered.netty.cycle.Planify{ case _ => ResponseString("not a websocket")})
+    }).start()
   }
 }
 
@@ -57,7 +73,7 @@ object HubNetWebExtension {
   def start(port:Int){
     so match {
       case Some(s) => throw new ExtensionException("already listening")
-      case None => { so = Some(Server(port, hubNetPort)) }
+      case None => { so = Some(Server(port, hubNetPort)); so.foreach(_.run()) }
     }
   }
   def stop(){ so.foreach(_.stop); so = None }

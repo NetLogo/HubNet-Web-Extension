@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <script type="text/javascript">
+
+var ws = null;
+
+function login(){
+  ws = new WebSocket('ws://localhost:9999');
+
+  ws.onclose = function () {
+    alert('WebSocket closed or not available');
+  };
+  ws.onmessage = function (event) {
+    alert('Data received: ' + event.data);
+  }; 
+  ws.onopen = function () {
+    var version = {"type":"VersionMessage","fields":{"version":"NetLogo 5.0RC2"}}
+    var handshake = {"type":"HandshakeFromClient",
+                     "fields":{"userId":document.getElementById('message').value,"clientType":"COMPUTER"}}
+    var enter = {"type":"EnterMessage"}
+
+    send(version);
+    send(handshake);
+    send(enter);
+
+    ws.onmessage = function (event) {
+      //alert('Data received: ' + event.data);
+    };
+  }; 
+}
+
+function pressButton(b){
+  var message = {
+     "type": "ActivityCommand",
+     "fields": {
+        "tag": b,
+        "content": {
+          "type": "Boolean",
+          "value": false
+        }
+      }
+   };
+  send(message);
+}
+
+function send(msg) {
+  //alert("about to send: " + JSON.stringify(msg)); 
+  ws.send(JSON.stringify(msg))
+}
+
+    </script>
+  </head>
+
+  <body>
+    <form>
+      Username:
+      <input type="text" name="message" id="message" value="josh"/>
+      <input type="button" value="Login" onclick="login()" />
+      <input type="button" value="up" onclick="pressButton('up')" />
+      <input type="button" value="down" onclick="pressButton('down')" />
+      <input type="button" value="left" onclick="pressButton('left')" />
+      <input type="button" value="right" onclick="pressButton('right')" />
+    </form>
+  </body>
+</html>

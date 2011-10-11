@@ -38,6 +38,7 @@ object JSONProtocol {
       val contentType = getString(v \ "type")
       val contentValue = (v \ "value").values
       contentType match {
+        case "Boolean" => contentValue.asInstanceOf[Boolean].asInstanceOf[AnyRef]
         // for some reason lift-json gives back a BigInt here instead of Int.
         case "Integer" => contentValue.asInstanceOf[BigInt].toInt.asInstanceOf[AnyRef]
         case "Double" => contentValue.asInstanceOf[Double].asInstanceOf[AnyRef]
@@ -76,6 +77,7 @@ object JSONProtocol {
     def typed(value: AnyRef): JValue = {
       val v =
         if(value.isInstanceOf[Int]) JInt(value.asInstanceOf[Int])
+        else if(value.isInstanceOf[Boolean]) JBool(value.asInstanceOf[Boolean])
         else if(value.isInstanceOf[Double]) JDouble(value.asInstanceOf[Double])
         else JString(value.toString)
       ("type", value.getClass.getSimpleName) ~ ("value", v)
@@ -121,6 +123,7 @@ object JSONProtocol {
 
   def main(args:Array[String]) {
     println(toJSON(ActivityCommand("my-slider", 50.asInstanceOf[AnyRef])) + "\n")
+    println(toJSON(ActivityCommand("my-button", false.asInstanceOf[AnyRef])) + "\n")
     println(toJSON(ActivityCommand("my-slider", 50.0.asInstanceOf[AnyRef])) + "\n")
     println(toJSON(ActivityCommand("my-chooser", "hello")) + "\n")
     println(toJSON(HandshakeFromClient("josh", "COMPUTER")) + "\n")
