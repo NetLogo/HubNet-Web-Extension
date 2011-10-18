@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <script type="text/javascript">
+
+
+var ws = null;
+
+function login(){
+  var addr = ipa.value + ':9999'
+  ws = new WebSocket('ws://'+addr);
+
+  ws.onclose = function () {
+    alert('WebSocket closed or not available');
+  };
+  ws.onmessage = function (event) {
+    alert('Data received: ' + event.data);
+  }; 
+  ws.onopen = function () {
+    var version = {"type":"VersionMessage","fields":{"version":"NetLogo 5.0RC2"}}
+    //alert('VER:' + version.fields.version);
+    var handshake = {"type":"HandshakeFromClient",
+                     "fields":{"userId":document.getElementById('message').value,"clientType":"COMPUTER"}}
+    var enter = {"type":"EnterMessage"}
+
+    send(version);
+    send(handshake);
+    send(enter);
+
+    logggin.style.visibility = 'hidden'; 
+    rtime.style.visibility = 'visible';
+    ws.onmessage = function (event) {
+      coords.value = JSON.parse(event.data).fields.content.value;
+    };
+  }; 
+}
+
+function pressButton(b){
+  var message = {
+     "type": "ActivityCommand",
+     "fields": {
+        "tag": b,
+        "content": {
+          "type": "Boolean",
+          "value": false
+        }
+      }
+   };
+  send(message);
+}
+
+function send(msg) {
+  //alert("about to send: " + JSON.stringify(msg)); 
+  ws.send(JSON.stringify(msg))
+}
+
+    </script>
+  </head>
+
+  <body>
+    <form>
+    <div id="logggin">
+      Username:
+      <input type="text" name="message" id="message" value=""/><br>
+      IP Address
+      <input type="text" name="ipa" id="ipa" value="165.124.87.29"/><br>
+      
+      <input type="button" value="Login" onclick="login()" /><p><p>
+      </div>
+      <div id="rtime"  >
+      <input type="button" value="up" onclick="pressButton('up')" />
+      <input type="button" value="down" onclick="pressButton('down')" />
+      <input type="button" value="left" onclick="pressButton('left')" />
+      <input type="button" value="right" onclick="pressButton('right')" /><br>
+      LOCATED AT:
+      <input type="text" name="coords" id="coords" value = "Location = "/>
+      </div>
+    </form>
+    
+    
+    <script type="text/javascript">
+    
+    rtime.style.visibility = 'hidden';
+    </script>
+  </body>
+</html>
