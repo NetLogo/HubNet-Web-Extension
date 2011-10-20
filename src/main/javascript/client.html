@@ -2,45 +2,44 @@
   <head>
     <script type="text/javascript">
 
-
 var ws = null;
 
 function login(){
-  ws = new WebSocket('ws://' + ipa.value + ':' + wsp.value);
+  ws = new WebSocket('ws://' + ipa.value + ':' + wsp.value)
 
-  ws.onclose = function () { alert('WebSocket closed or not available'); };
-  ws.onmessage = function (event) { alert('Data received: ' + event.data); }; 
+  ws.onclose = function () { alert('WebSocket closed or not available') }
+  ws.onmessage = function (event) { alert('Data received: ' + event.data) }
   ws.onopen = function () {
-    var version = {"type":"VersionMessage","fields":{"version":"NetLogo 5.0RC2"}}
-    var handshake = {"type":"HandshakeFromClient",
-                     "fields":{"userId":document.getElementById('message').value,"clientType":"COMPUTER"}}
-    var enter = {"type":"EnterMessage"}
+    var version = {type:"VersionMessage",fields:{version:"NetLogo 5.0RC2"}}
+    var handshake = {type:"HandshakeFromClient",
+                     fields:{userId:document.getElementById('message').value,clientType:"COMPUTER"}}
+    var enter = {type:"EnterMessage"}
 
-    send(version);
-    send(handshake);
-    send(enter);
+    send(version)
+    send(handshake)
+    send(enter)
 
-    logggin.style.visibility = 'hidden'; 
-    rtime.style.visibility = 'visible';
+    logggin.style.visibility = 'hidden'
+    rtime.style.visibility = 'visible'
 
     ws.onmessage = function (event) {
-      coords.value = JSON.parse(event.data).fields.content.value;
-    };
-  }; 
+      coords.value = JSON.parse(event.data).fields.content.value
+    }
+  }
 }
 
 function pressButton(b){
   var message = {
-     "type": "ActivityCommand",
-     "fields": {
-        "tag": b,
-        "content": {
-          "type": "Boolean",
-          "value": false
+     type: "ActivityCommand",
+     fields: {
+        tag: b,
+        content: {
+          type: "Boolean",
+          value: false
         }
       }
-   };
-  send(message);
+   }
+  send(message)
 }
 
 function send(msg) {
@@ -76,7 +75,7 @@ function send(msg) {
     
     <script type="text/javascript">
     
-    rtime.style.visibility = 'hidden';
+    rtime.style.visibility = 'hidden'
     ipa.value = location.hostname
     </script>
   </body>
