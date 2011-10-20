@@ -6,18 +6,12 @@
 var ws = null;
 
 function login(){
-  var addr = ipa.value + ':9999'
-  ws = new WebSocket('ws://'+addr);
+  ws = new WebSocket('ws://' + ipa.value + ':' + wsp.value);
 
-  ws.onclose = function () {
-    alert('WebSocket closed or not available');
-  };
-  ws.onmessage = function (event) {
-    alert('Data received: ' + event.data);
-  }; 
+  ws.onclose = function () { alert('WebSocket closed or not available'); };
+  ws.onmessage = function (event) { alert('Data received: ' + event.data); }; 
   ws.onopen = function () {
     var version = {"type":"VersionMessage","fields":{"version":"NetLogo 5.0RC2"}}
-    //alert('VER:' + version.fields.version);
     var handshake = {"type":"HandshakeFromClient",
                      "fields":{"userId":document.getElementById('message').value,"clientType":"COMPUTER"}}
     var enter = {"type":"EnterMessage"}
@@ -28,6 +22,7 @@ function login(){
 
     logggin.style.visibility = 'hidden'; 
     rtime.style.visibility = 'visible';
+
     ws.onmessage = function (event) {
       coords.value = JSON.parse(event.data).fields.content.value;
     };
@@ -60,9 +55,11 @@ function send(msg) {
     <form>
     <div id="logggin">
       Username:
-      <input type="text" name="message" id="message" value=""/><br>
+      <input type="text" name="message" id="message"/><br>
       IP Address
-      <input type="text" name="ipa" id="ipa" value="165.124.87.29"/><br>
+      <input type="text" name="ipa" id="ipa"/><br>
+      Port
+      <input type="text" name="wsp" id="wsp" value="9999"/><br>
       
       <input type="button" value="Login" onclick="login()" /><p><p>
       </div>
@@ -80,6 +77,7 @@ function send(msg) {
     <script type="text/javascript">
     
     rtime.style.visibility = 'hidden';
+    ipa.value = location.hostname
     </script>
   </body>
 </html>

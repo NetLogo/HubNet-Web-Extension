@@ -120,21 +120,4 @@ object JSONProtocol {
     }
     compact(render(json))
   }
-
-  def main(args:Array[String]) {
-    println(toJSON(ActivityCommand("my-slider", 50.asInstanceOf[AnyRef])) + "\n")
-    println(toJSON(ActivityCommand("my-button", false.asInstanceOf[AnyRef])) + "\n")
-    println(toJSON(ActivityCommand("my-slider", 50.0.asInstanceOf[AnyRef])) + "\n")
-    println(toJSON(ActivityCommand("my-chooser", "hello")) + "\n")
-    println(toJSON(HandshakeFromClient("josh", "COMPUTER")) + "\n")
-    println(toJSON(EnterMessage) + "\n")
-    println(toJSON("NetLogo 5.0RC2") + "\n")
-
-    println(fromJSON("""{"type":"ActivityCommand","fields":{"tag":"my-slider","content":{"type":"Integer","value":50}}}"""))
-    println(fromJSON("""{"type":"ActivityCommand","fields":{"tag":"my-chooser","content":{"type":"Double","value":50.0}}}"""))
-    println(fromJSON("""{"type":"ActivityCommand","fields":{"tag":"my-chooser","content":{"type":"String","value":"hello"}}}"""))
-    println(fromJSON("""{"type":"HandshakeFromClient","fields":{"userId":"josh","clientType":"COMPUTER"}}"""))
-    println(fromJSON("""{"type":"EnterMessage"}"""))
-    println(fromJSON("""{"type":"VersionMessage","fields":{"version":"NetLogo 5.0RC2"}}"""))
-  }
 }
