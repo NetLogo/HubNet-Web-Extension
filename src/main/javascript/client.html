@@ -28,6 +28,8 @@ function login(){
 }
 
 function pressButton(b){ sendActivityMessage(b, "Boolean", false) }
+function flipSwitch(s, newValue){ sendActivityMessage(s, "Boolean", newValue) }
+function moveSlider(s, newValue){ sendActivityMessage(s, "Double", newValue) }
 
 function sendActivityMessage(tag, contentType, value){
   var message = {
