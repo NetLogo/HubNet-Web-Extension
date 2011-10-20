@@ -27,11 +27,13 @@ function login(){
   }
 }
 
-function pressButton(b){
+function pressButton(b){ sendActivityMessage(b, "Boolean", false) }
+
+function sendActivityMessage(tag, contentType, value){
   var message = {
      type: "ActivityCommand",
-     fields: { tag: b, content: { type: "Boolean", value: false } }
-   }
+     fields: { tag: tag, content: { type: contentType, value: value } }
+  }
   send(message)
 }
 

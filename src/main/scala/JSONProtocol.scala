@@ -41,7 +41,7 @@ object JSONProtocol {
         case "Boolean" => contentValue.asInstanceOf[Boolean].asInstanceOf[AnyRef]
         // for some reason lift-json gives back a BigInt here instead of Int.
         case "Integer" => contentValue.asInstanceOf[BigInt].toInt.asInstanceOf[AnyRef]
-        case "Double" => contentValue.asInstanceOf[Double].asInstanceOf[AnyRef]
+        case "Double" => contentValue.asInstanceOf[BigInt].toDouble.asInstanceOf[AnyRef]
         case "String" => contentValue.asInstanceOf[String]
       }
     }
