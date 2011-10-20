@@ -5,7 +5,7 @@ students-own [ user-id step-size ]
 
 to startup
   hubnet-reset
-  hubnet-web:start 9999
+  hubnet-web:start 8080 "client.html" 9999
 end
 
 to setup

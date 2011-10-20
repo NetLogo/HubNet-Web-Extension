@@ -6,14 +6,13 @@ var ws = null;
 
 function login(){
   ws = new WebSocket('ws://' + ipa.value + ':' + wsp.value)
-
   ws.onclose = function () { alert('WebSocket closed or not available') }
   ws.onmessage = function (event) { alert('Data received: ' + event.data) }
   ws.onopen = function () {
-    var version = {type:"VersionMessage",fields:{version:"NetLogo 5.0RC2"}}
-    var handshake = {type:"HandshakeFromClient",
-                     fields:{userId:document.getElementById('message').value,clientType:"COMPUTER"}}
-    var enter = {type:"EnterMessage"}
+    var version = { type:"VersionMessage", fields:{version:"NetLogo 5.0RC2"} }
+    var handshake = {type: "HandshakeFromClient",
+                     fields: {userId: document.getElementById('message').value, clientType: "COMPUTER"}}
+    var enter = {type: "EnterMessage"}
 
     send(version)
     send(handshake)
@@ -31,13 +30,7 @@ function login(){
 function pressButton(b){
   var message = {
      type: "ActivityCommand",
-     fields: {
-        tag: b,
-        content: {
-          type: "Boolean",
-          value: false
-        }
-      }
+     fields: { tag: b, content: { type: "Boolean", value: false } }
    }
   send(message)
 }
