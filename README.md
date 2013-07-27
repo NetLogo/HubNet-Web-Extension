@@ -1,6 +1,8 @@
 ## HubNet Web Extension
 
-The HubNet Web Extension is a NetLogo extension that allows JavaScript clients to connect to NetLogo. Hopefully, this includes iphones and ipads as well. 
+The HubNet Web Extension is a NetLogo extension that allows JavaScript clients to connect to NetLogo. Hopefully, this includes iPhones and iPads as well. 
+
+This is experimental, proof-of-concept type code.
 
 ## Credits
 
