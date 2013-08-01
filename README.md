@@ -2,7 +2,11 @@
 
 The HubNet Web Extension is a NetLogo extension that allows JavaScript clients to connect to NetLogo. Hopefully, this includes iPhones and iPads as well. 
 
-This is experimental, proof-of-concept type code.
+This is experimental, proof-of-concept type code. It is not actively maintained.
+
+## UC Davis version
+
+see also https://github.com/cjt8109/hubnet-web-extension , which includes both a fresher version of the server code and “an expanded JavaScript client that runs on iOS devices”
 
 ## Credits
 
