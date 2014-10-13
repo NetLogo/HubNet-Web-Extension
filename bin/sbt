@@ -13,13 +13,9 @@ fi
 export PATH=$JAVA_HOME/bin:$PATH
 JAVA=$JAVA_HOME/bin/java
 
-# UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
-# add tools.jar to the classpath so we can use native2ascii on linux - ST 1/7/11
 $JAVA \
   -Xss16m -Xmx1536m -XX:MaxPermSize=256m \
   -Dfile.encoding=UTF-8 \
   $JAVA_OPTS \
-  -Djava.awt.headless=true \
-  -Dapple.awt.graphics.UseQuartz=false \
-  -classpath $JAVA_HOME/lib/tools.jar:`dirname $0`/sbt-launch.jar \
+  -classpath `dirname $0`/sbt-launch.jar \
   xsbt.boot.Boot "$@"
