@@ -1,0 +1,3 @@
+/bin/sbt-launch-*.jar
+/project
+/target
